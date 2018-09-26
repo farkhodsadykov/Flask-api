@@ -85,7 +85,8 @@ def get_one_user(current_user, public_id):
     return jsonify({'User': user_data})
 
 @app.route('/user', methods=['GET'])
-def get_all_users():
+@login_required_api
+def get_all_users(current_user):
     users = User.query.all()
     data = []
     for user in users:
@@ -120,7 +121,8 @@ def login_api():
     return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login-required"'})
 
 @app.route('/')
-def index():
+@login_required_api
+def index(current_user):
     users = User.query.all()
     data = []
     for user in users:
