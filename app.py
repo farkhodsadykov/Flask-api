@@ -73,6 +73,11 @@ def craete_user(current_user):
 
 
 
+@app.route('/sets', methods=['GET', 'POST'])
+def get_set_data():
+    data = request.get_json()
+    return jsonify({'data': data})
+
 @app.route('/user', methods=['GET'])
 @login_required_api
 def get_all_users(current_user):
@@ -156,4 +161,4 @@ def login_api():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=80, debug=True)
