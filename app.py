@@ -46,8 +46,6 @@ def login_required_api(f):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-
-
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(60), unique=True)
@@ -70,7 +68,6 @@ def craete_user(current_user):
     db.session.add(new_user)
     db.session.commit()
     return jsonify({"response": "New user created!"})
-
 
 
 @app.route('/sets', methods=['GET', 'POST'])
@@ -134,14 +131,15 @@ def get_one_user(current_user, public_id):
 def new_user():
     data = request.get_json()
     if data:
-        try:
-            hashed_password = generate_password_hash(data['password'], method='sha256')
-            new_user = User(public_id=str(uuid.uuid4()), password=hashed_password, username=data['username'], firstname=data['firstname'], lastname=data['lastname'],  email=data['email'], status=True, role='student', group='default')
-            db.session.add(new_user)
-            db.session.commit()
-            return jsonify({'message': 'User has been created'})
-        except Exception as e:
-            return jsonify({'message': 'User already created'})
+        user = User.query.filter_by(username=data['username']).first()
+        if user:
+            return jsonify({'message': 'User already exist'})
+        hashed_password = generate_password_hash(data['password'], method='sha256')
+        new_user = User(public_id=str(uuid.uuid4()), password=hashed_password, username=data['username'], firstname=data['firstname'], lastname=data['lastname'],  email=data['email'], status=True, role='student', group='default')
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({'message': 'User has been created'})
+
     return jsonify({ 'message': 'Mising data' })
 
 
