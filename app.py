@@ -91,7 +91,7 @@ def get_all_users(current_user):
         data.append(user_data)
     return jsonify({'User': data})
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 @login_required_api
 def index(current_user):
     users = User.query.all()
@@ -159,4 +159,4 @@ def login_api():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
